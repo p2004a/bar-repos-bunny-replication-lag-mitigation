@@ -28,8 +28,9 @@ refresh_repo() {
   curl --fail-with-body --silent \
        -L $BASE_URL/$REPO/versions.gz \
        --output served_${REPO}_versions.gz
-  curl --silent -A 'curl latestreplicated' \
-       -L $BASE_URL/$REPO/versions.gz \
+  curl --fail-with-body --silent \
+       --header "AccessKey: $BUNNY_STORAGE_ACCESS_KEY" \
+       "https://storage.bunnycdn.com/$STORAGE_ZONE_NAME/$REPO/versions.gz" \
        --output latest_${REPO}_versions.gz
 
   if [[ "$(md5sum served_${REPO}_versions.gz | cut -d ' ' -f 1)" == \
